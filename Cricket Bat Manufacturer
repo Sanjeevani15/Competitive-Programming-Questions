@@ -1,0 +1,84 @@
+//Asked in Altimetrik Women Code-a-thon 2021  : Java Solution
+/* Mr Ski is a famous Cricket Bat manufacturer in Meerut. He has been in the business for a long time now. He has been developing the special bats with the changing times to meet up the expectations of the players. He was researching for a while to develop new kind of bats as the cricket is moving at a fast pace and he has to maintain his reputation and quality of bats. 
+He has developed special kind of bats and the word has spread all over the city. The bats have a weight which provides the balance to the cricketer and are ready to use. The bats can be directly put to action without knocking. There are N such bats with each bat having a weight Wi and a minimum price Mi. Mr Ski knows the worth of his bats and has decided to sell only one bat per person.
+There are C Cricketers who have contacted Mr. Ski and each of them has different requirements. A cricketer Cj will only be interested in a bat with a weight greater than Gj and he can spend maximum money of Pj. 
+
+Suppose the cricketer wants a bat with a weight greater than 5 and the maximum money he can spend is 100. With the given requirements, the cricketer would be interested in Bat 3 and Bat 4.
+
+
+Mr Ski wants to know the maximum number of bats he would be able to sell. He is busy in showing bats to the cricketers and needs your help. Can you tell him the maximum number of bats he would be able to sell?
+
+
+
+
+Input Format
+The first line of input consists of two space-separated integers, the number of Cricketers (C) and the number of bats (N).
+
+The next C lines each consists of two space-separated integers, the requirement of the weight of the bat (Gj) and maximum price the cricketer can spend (Pj)
+
+The next N lines each consists of two space-separated integers, the weight of the bat (Wi) and minimum price of the bat (Mi)
+
+Output Format
+Print the required output in a separate line.  */
+
+
+import java.io.*;
+import java.util.*;
+public class CandidateCode {
+   
+  static Scanner sc = new Scanner(System.in);
+  static final int r = sc.nextInt();
+  static final int b = sc.nextInt();
+
+   public static void main(String args[] ) throws Exception {
+
+    boolean[][] bpGraph = new boolean[r][b];
+    long[][] req = new long[r][2];
+    long[][] bat = new long[b][2];
+
+    for (int i = 0; i < r; i++) {
+      req[i][0] = sc.nextLong();
+      req[i][1] = sc.nextLong();
+    }
+    for (int i = 0; i < b; i++) {
+      bat[i][0] = sc.nextLong();
+      bat[i][1] = sc.nextLong();
+    }
+    for (int p = 0; p < r; p++) {
+      for (int q = 0; q < b; q++) {
+        if (req[p][0] < bat[q][0] && req[p][1] >= bat[q][1]) {
+          bpGraph[p][q] = true;
+        } else {
+          bpGraph[p][q] = false;
+        }
+      }
+    }
+    System.out.print(maxBPM(bpGraph));
+  }
+
+  static int maxBPM(boolean bpGraph[][]) {
+    int matchR[] = new int[b];
+    for (int i = 0; i < b; ++i) matchR[i] = -1;
+    int result = 0;
+    for (int u = 0; u < r; u++) {
+      boolean seen[] = new boolean[b];
+      for (int i = 0; i < b; ++i) seen[i] = false;
+
+      if (bpm(bpGraph, u, seen, matchR)) result++;
+    }
+    return result;
+  }
+
+  static boolean bpm(boolean bpGraph[][], int u, boolean seen[], int matchR[]) {
+    for (int v = 0; v < b; v++) {
+      if (bpGraph[u][v] && !seen[v]) {
+        seen[v] = true;
+        if (matchR[v] < 0 || bpm(bpGraph, matchR[v], seen, matchR)) {
+          matchR[v] = u;
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+}
