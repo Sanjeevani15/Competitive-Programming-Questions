@@ -1,0 +1,78 @@
+//Java Solution 
+
+import java.io.*;
+import java.util.*;
+public class CandidateCode {
+    public static void main(String args[] ) throws Exception {
+		int total_packets = -1;
+		String input_ballsPP;
+		try (Scanner sc = new Scanner(System.in)) {
+			total_packets = sc.nextInt();
+			sc.nextLine();
+			input_ballsPP = sc.nextLine();
+		}
+		calTM(total_packets, input_ballsPP);
+
+	}
+
+	private static void calTM(int total_packets, String input_ballsPP) {
+		String[] ballsPP = input_ballsPP.split(" ");
+		long total_moves = 0;
+		for (int i = 0; i < total_packets; i++) {
+			Long ball_qty = Long.valueOf(ballsPP[i]);
+			if (ball_qty == 1) {
+				total_moves += 1;
+				continue;
+			}
+			List<Long> priF = priF(ball_qty);
+			//System.out.println("Factorys:" + priF);
+			total_moves += getCM(priF);
+		}
+		System.out.println(total_moves);
+	}
+
+	private static long getCM(List<Long> priF) {
+		long current_pack_move = 1; // default move
+		int move = 1;
+		for (int j = priF.size(); j > 0; j--) {
+			current_pack_move += getMC(priF, move++);
+		}
+		//System.out.println("Pack : " + current_pack_move);
+		return current_pack_move;
+	}
+
+	private static long getMC(List<Long> priF, int move) {
+		int size = priF.size() - 1;
+		long result = 1;
+		for (int i = 0; i < move; i++, size--) {
+			result *= priF.get(size);
+		}
+		return result;
+	}
+
+	public static List<Long> priF(long n) {
+		List<Long> priF = new ArrayList<Long>(10);
+		if (n == 1) {
+			priF.add(Long.valueOf(1));
+		}
+		// Print the number of 2s that divide n
+		while (n % 2 == 0) {
+			// System.out.print(2 + " ");
+			priF.add(Long.valueOf(2));
+			n /= 2;
+		}
+
+		for (long i = 3; i <= Math.sqrt(n); i += 2) {
+			while (n % i == 0) {
+				// System.out.print(i + " ");
+				priF.add(i);
+				n /= i;
+			}
+		}
+
+		if (n > 2) {
+			priF.add(n);
+		}
+
+		return priF;
+	}
