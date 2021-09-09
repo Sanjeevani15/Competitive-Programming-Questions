@@ -1,0 +1,41 @@
+#include <iostream>
+#include <string.h>
+#include <math.h>
+
+using namespace std;
+
+int isPrimeString(string str)
+{
+      int sum1=0, sum2=0;
+  for(int i=0;i<=str.length();i++)
+ {
+     if(i%2==0)        
+     {
+         sum1=sum1+int(str[i]);
+     }
+     else
+     {
+         sum2=sum2+int(str[i]);
+     }
+     
+ }
+ int diff=abs(sum1-sum2);
+ return diff;
+}
+
+int main()
+{
+   int diff , n;
+   string str;
+   cin>>n;
+   for(int j=0;j<n;j++)
+   {cin>>str;
+   diff = isPrimeString(str);
+   
+   if((diff%3==0) || (diff%5==0) || (diff%7==0))
+            cout << "Prime String" << endl;
+   else
+        cout << "Casual String" << endl;
+   }
+return 0;
+}
